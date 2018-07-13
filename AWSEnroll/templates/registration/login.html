@@ -25,17 +25,17 @@
   </head>
   <body class="text-center">
    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3371FF;" id="mainNav">
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3f85db;" id="mainNav">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'admin:index' %}">ADMIN</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="color:#F0F0F0">
+        <a class="navbar-brand text-light" href="{% url 'admin:index' %}">ADMIN</a>
+        <button class="navbar-toggler navbar-toggler-right text-light text-lg" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'project' %}">AWS Portal</a>
+              <a class="nav-link text-light text-lg" href="{% url 'project' %}">AWS Portal</a>
             </li>
           </ul>
         </div>
@@ -51,12 +51,12 @@
       <label for="id_password" class="sr-only">Password</label>
       {{form.password}}
       <div>
-      <button class="btn btn-lg btn-dope btn-block" style="background-color:#3371FF" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-dope btn-block" type="submit">Sign in</button>
     </form>
     <form style="margin-top: 7px">
     <a class="btn btn-lg btn-secondary btn-block" url="{% url 'admin:index' %}" id-"adminButton" onclick="adminButtonHit()">ADMIN</a>
     </form>
-    <p class="mt-5 mb-3 text-muted">© Software Proof of Concept MIT License 2018</p>
+    <p class="mt-5 mb-3 text-muted">Software Proof of Concept MIT License ©  2018</p>
   </body>
 </html>
 <script>
@@ -139,17 +139,11 @@ body {
   margin:0px;
 }
 .btn-dope{
-  background-color:#3371FF;
-  color:#BFD7FF;
+  background-color:#3f85db;
+  color:#F0F0F0;
 }
 .btn-dope:hover{
   background-color:#2964C4;
   color:white;
-}
-a{
-color:#3371FF;
-}
-a:hover{
-color:green;
 }
 </style>

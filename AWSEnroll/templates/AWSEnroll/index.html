@@ -25,23 +25,26 @@
   </head>
   <body class="main">
   <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3371FF;" id="mainNav">
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3f85db;" id="mainNav">
       <div class="container" style="padding-top:0px; padding-bottom:0px; padding-left: 10px;">
-        <a class="navbar-brand" href="{% url 'admin:index' %}">ADMIN</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand text-light" href="{% url 'admin:index' %}">ADMIN</a>
+        <button class="navbar-toggler navbar-toggler-right text-light" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Login</a>
+              <a class="nav-link text-light" href="{% url 'login' %}">Login</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
     {% csrf_token %}
+        <p class="h3 text-center card-header container-fluid" style="color:#3f85db;background-color: white;border: 1px solid gainsboro;">
+          AWS Control Panel
+        </p>
         <ul id="topHalf" style="margin: auto;padding-bottom:16px;padding-top:12px;padding-left:0px">
             <li class="column" style="padding-right:10px;padding-left:0px;">
                 <h5 class="navBar">Welcome, {{ first_name }}</h5>
@@ -147,7 +150,7 @@
             </div>
           </div>
         </div>
-        <div style="margin: auto; border-top: 1px solid black; width:100%"></div>
+        <div style="margin: auto; border-top: 1px solid DarkGray; width:100%"></div>
         <div id="bottomHalf">
         {% load bootstrap4 %}
         {% load querystring from django_tables2 %}
@@ -157,7 +160,7 @@
             <div class="table-container" style="overflow-x: scroll;">
         {% endif %}
             {% block table %}
-            <div class="table-responsive" style="padding-bottom:0px;background-color:white;">
+            <div class="table-responsive" style="padding-bottom:0px;background-color:white;border: 1px solid gainsboro;">
                 <table id = "myTable" class="table table-hover table-bordered table-striped"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
                     {% block table.thead %}
                     <thead>                 
@@ -443,14 +446,14 @@ th{
     text-align: left;
     pointer-events: none;
     cursor: default;
-    color:#3371FF
+    color:#3f85db
 }
 td{
     text-align: left;
     cursor: default;
 }
 a {
-    color:#3371FF;
+    color:#3f85db;
     font-weight: bold;
 }
 .buttonList {
@@ -493,7 +496,7 @@ p{
     padding-bottom: 0px;
 }
 .main{
-    background-color:#C6E2FF;
+    background-color:#eff1f2;
     margin: 0 auto;
     width: 90%;
     padding-top:50px;
@@ -503,7 +506,7 @@ p{
     padding-right:10px;
 }
 .btn-dope{
-  background-color:#3371FF;
+  background-color:#3f85db;
   color:#F0F0F0;
 }
 .btn-dope:hover{

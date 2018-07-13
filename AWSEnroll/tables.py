@@ -14,8 +14,8 @@ class ProjectTable(tables.Table):
 
     def render_buttons(self, record):
         if record.owner.username == self.requestor:
-            return mark_safe('<button onclick="deleteProject(event)" class="btn-sm btn-danger whiteBold">Delete</button>')
-        return mark_safe('<button onclick="userQuits(event)" class="btn-sm btn-warning grayText">Quit</button>')
+            return mark_safe('<button onclick="deleteProject(event)" class="btn-sm btn-success">Launch EC2</button>')
+        return mark_safe('<button onclick="userQuits(event)" class="btn-sm btn-success" disabled>Launch EC2</button>')
 
 class UserTable(tables.Table):
 
