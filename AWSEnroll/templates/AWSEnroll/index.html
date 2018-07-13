@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>SeniorDevops.com</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js" crossorigin="anonymous"></script>
+    {% load staticfiles %}
+    <link href="{% static "AWSEnroll/vendor/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <!-- Plugin CSS -->
+    <link href="{% static "AWSEnroll/vendor/magnific-popup/magnific-popup.css" %}" rel="stylesheet">
+    <!-- MARK TO DO: FIX CSS WHEN SHRUNK -->
+    <link href="{% static "AWSEnroll/css/creative.min.css" %}" rel="stylesheet">
+  </head>
+  <body class="main">
+  <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3371FF;" id="mainNav">
+      <div class="container" style="padding-top:0px; padding-bottom:0px; padding-left: 10px;">
+        <a class="navbar-brand" href="{% url 'admin:index' %}">ADMIN</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    {% csrf_token %}
+        <ul id="topHalf" style="margin: auto;padding-bottom:16px;padding-top:12px;padding-left:0px">
+            <li class="column" style="padding-right:10px;padding-left:0px;">
+                <h5 class="navBar">Welcome, {{ first_name }}</h5>
+                <button id="logOutButton" type="button" class="btn-sm btn-dope" style="font-weight: bold;border:none;" onclick="clockOut()">Log Out</button>
+            </li>
+            <li class="column" style="padding-left:0px;">
+                <div style="display:inline-block; padding: 0px; vertical-align:text-middle" id="myButtonDiv">
+                    <ul class="buttonList" style="padding:0px;">
+                        <li>
+                            <h5 style="margin-bottom: 5px;padding-left:10px;" class="navBar">Action:</h5>
+                            <button id="projectButton" type="button" class="btn-sm btn-dope navBar" data-toggle="modal" data-target="#myModal" style="font-weight: bold;border:none;">Make Project</button>
+                            <button id="adminButton" type="button" class="btn-sm btn-dope" onclick="goToAdmin()">Admin</button>
+                        </li>
+                        <li id="projectsContainer">
+                          <h5 style="padding-left:5px;" class="navBar">Edit:</h5>
+                          <select id="projectSelected">
+                            <option id="myPlaceHolder" value="all">--------All--------</option>
+                            {% for project in object_list %}
+                              {% if project.owner.id == user.id %}
+                                <option value="{{ project }}">{{ project }}</option>
+                              {% else %}
+                                <option value="{{ project }}" disabled="true">{{ project }}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+                        </li>             
+                    <ul>
+                </div>
+            </li>
+        </ul>
+        <!-- Project Modal (myModal) -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form action="url {{ user_update }}" method="PUT" id="userForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="projectLabel" style="padding-right: 25px; padding-top:3px;">Enter:</h5>
+                  {{ myForm.projectName }}
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>    
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteLabelInitial" style="padding-right: 25px">Invite:</h5>
+                    {{ myForm.email }}
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-secondary" style="color:#F0F0F0" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-dope" data="closingComments">Save changes</button>
+                </div>
+                <script src='https://www.google.com/recaptcha/api.js'></script>
+                <div class="g-recaptcha" data-sitekey="6Lc6rVIUAAAAAKIyufRXlshHeyzLaZlm6xZO15w9"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Invite Modal -->
+        <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form method="PUT" id="inviteForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h4 class="modal-title" id="projectName" style="padding-right: 25px; padding-top:3px; text-align: center;">{{ currentProject }}</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>    
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteLabelOne" style="padding-right: 25px">Invite:</h5>
+                    {{ inviteForm.emailOne }}
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-secondary" style="color:#F0F0F0" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-dope" data="emailFields">Save changes</button>
+                </div>
+                <script src='https://www.google.com/recaptcha/api.js'></script>
+                <div class="g-recaptcha" data-sitekey="6Lc6rVIUAAAAAKIyufRXlshHeyzLaZlm6xZO15w9"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Delete Modal  -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form method="DELETE" id="deleteForm">
+                {% csrf_token %}
+                <div style="display:block;left-margin: 10px">
+                  {{ deleteForm.name }}
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <h5 class="modal-title" id="deleteLabel" style="margin:10px">Enter a project name to delete,</h5>
+                <h5 class="modal-title" id="deleteLabel" style="margin:10px">or hit the blue cancel button to go back.</h5>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-dope" style="color:#F0F0F0" data-dismiss="modal">CANCEL</button>
+                  <button type="submit" class="btn btn-danger" id="deleteModalButton" data="closingComments">DELETE</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div style="margin: auto; border-top: 1px solid black; width:100%"></div>
+        <div id="bottomHalf">
+        {% load bootstrap4 %}
+        {% load querystring from django_tables2 %}
+        {% load title from django_tables2 %}
+        {% block "content" %}
+        {% if table.page %}
+            <div class="table-container" style="overflow-x: scroll;">
+        {% endif %}
+            {% block table %}
+            <div class="table-responsive" style="padding-bottom:0px;background-color:white;">
+                <table id = "myTable" class="table table-hover table-bordered table-striped"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
+                    {% block table.thead %}
+                    <thead>                 
+                      <tr>
+                        {% for column in table.columns %}
+                            {% if column.orderable %}
+                            <th {{ column.attrs.th.as_html }}><a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header|title }}</a></th>
+                            {% else %}
+                            <th {{ column.attrs.th.as_html }}>{{ column.header|title }}</th>
+                            {% endif %}
+                        {% endfor %}
+                      </tr>
+                    </thead>
+                    {% endblock table.thead %}
+                    {% block table.tbody %}
+                    <tbody>
+                        {% for row in table.page.object_list|default:table.rows %} {# support pagination #}
+                          {% block table.tbody.row %}
+                          <tr class="{% cycle "odd" "even" %}">
+                              {% for column, cell in row.items %}
+                                  <td {{ column.attrs.td.as_html }}>{{ cell }}</td>
+                              {% endfor %}
+                          </tr>
+                          {% endblock table.tbody.row %}
+                        {% empty %}
+                          {% if table.empty_text %}
+                          {% block table.tbody.empty_text %}
+                          <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+                          {% endblock table.tbody.empty_text %}
+                          {% endif %}
+                        {% endfor %}
+                    </tbody>
+                    {% endblock table.tbody %}
+                    {% block table.tfoot %}
+                    <tfoot></tfoot>
+                    {% endblock table.tfoot %}
+            </table>
+        </div>
+        {% endblock table %}
+        {% if table.page %}
+            {% block pagination %}
+            {% bootstrap_pagination table.page url=request.get_full_path %}
+            {% endblock pagination %}
+        {% endif %}
+        {% endblock "content" %}       
+      </div>
+    </div>    
+  <!--div id="myFooter" style="padding-top:200px;">SeniorDevOps.com © 2018</div-->
+  </body>
+</html>
+<script>
+    $('document').ready(function(){ 
+        if("{{currentProject}}"){
+           $("#adminButton").css({"display": "inline-block"});
+           $('#bottomHalf').attr("style","width:400px"); // default is 100 percent
+           $("#projectButton").attr("data-target", "");
+           $('#projectButton').html('Invite').button("refresh");
+        }
+        $('th.username').html("Members").attr("style","text-align:center");
+        $('th.name').html("Project");
+        $(".startedFormatted").attr("style","width:150px");
+        $(".finishedFormatted").attr("style","width:150px");
+        $(".myHours").attr("style","width:150px");
+        $(".comments").attr("style","text-align:left");
+        $("myPlaceHolder").css("color","white");
+        $('#projectSelected').val("{{ request.GET.project }}" || "all");
+        if({{ hasProjects}}){
+            $("#inviteButtonContainer").css({"display": "inline-block"});
+            $("#projectsContainer").css({"display": "inline-block"});
+        }
+    });
+    $('#inviteForm').on('submit', function(event){
+        event.preventDefault();
+        var inviteUser = $("form#inviteForm")["0"][2].value;
+        updateCurrentProjects("{{currentID}}", inviteUser);
+        $('#myModal').modal('hide');
+    });
+    $('#userForm').on('submit', function(event){
+        event.preventDefault();  
+        createProject();
+        $('#myModal').modal('hide');
+    });
+    $('#deleteForm').on('submit', function(event){
+        event.preventDefault();
+        var deletingProject = $("form#deleteForm")["0"][1].value;
+        var selectedProject = sessionStorage.getItem("deleteThisProject");
+        if (deletingProject == selectedProject){
+            var headers = { "Content-Type": "application/json"};
+            try{
+                $.ajax({
+                    url: "delete/" + deletingProject + "/",
+                    headers: headers,
+                    type: "DELETE",
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function (xhr, status) {
+                        if(xhr.status === 404){
+                            alert("Project not found. Failed to validate.");
+                        }
+                    },
+                });
+            }catch{
+                return;
+            }
+            $('#deleteModal').modal('hide');
+        }else{
+            alert("Delete failed, entry did not match project name.");
+        }
+    });
+    $(".modal").on("hidden.bs.modal", function(){
+        $("input").val("");
+    });
+    $("#id_email").attr({
+        class:"form-control", 
+        placeholder: 'Email Address',
+        required: false
+    });
+    $("#id_emailOne").attr({
+        class:"form-control", 
+        placeholder: 'Email Address',
+        required: true
+    });
+    $("#id_projectName").attr({
+        class:"form-control", 
+        placeholder: 'Project name'
+    });
+    $("#projectButton").click(function(){
+        var mode = sessionStorage.getItem("mode");
+        if(mode == "edit"){
+            $('#inviteModal').modal('show');
+        }
+    });
+    function createProject(){ 
+        var projectName = $("#id_projectName").val();
+        var additionalUser = $("#id_email").val();
+        $.ajax({
+            url: "new/",
+            data: {
+                "name":projectName, 
+                "owner": {{ user.id }}
+            },
+            type: "POST",                    
+            dataType: "json",                                 
+            success: function (data) {                              
+                updateCurrentProjects(data.id, "{{ user_email }}");
+                if (additionalUser){                                              
+                    updateCurrentProjects(data.id, additionalUser);              
+                }
+            },
+            error: function (xhr, status) {
+                console.log(xhr, status);
+            },
+        })
+    } 
+    function updateCurrentProjects(projectID, username){
+        var myUrl = "{% url 'users_projects' %}?username=" + username;
+        $.ajax({
+            url: myUrl,
+            type: "GET",
+            success: function (data) {
+                var myProjects = [];
+                data.forEach(function(project){
+                    myProjects.push(project.id);
+                });
+                myProjects.push(projectID); // ADDS THE NEW PROJECT ID TO THE ARRAY OF OLD ONES
+                userAddProject(myProjects, username);
+            },
+            error: function (xhr, status) {
+                console.log(xhr, status);
+            },
+        })
+    }
+    function userDeleteProject(projectID, username){
+        var myUrl = "{% url 'users_projects' %}?username=" + username;
+        $.ajax({
+            url: myUrl,
+            type: "GET",
+            success: function (data) {
+                var myProjects = [];
+                data.forEach(function(project){
+                    myProjects.push(project.id);
+                });
+                myProjects.pop(projectID); // REMOVES SELECTED PROJECT ID, THEN SETS ARRAY
+                userAddProject(myProjects, username);
+                $('#projectSelected').val("all");
+            },
+            error: function (xhr, status) {
+                console.log(xhr, status);
+            },
+        })
+    }
+    function userQuitProject(projectName, username){
+        var myUrl = "{% url 'users_projects' %}?username=" + username;
+        $.ajax({
+            url: myUrl,
+            type: "GET",
+            success: function (data) {
+                var myProjects = {};
+                data.forEach(function(project){
+                    myProjects[project.name] = project.id;
+                });
+                delete(myProjects[projectName]);
+                var projectList = Object.values(myProjects); // REMOVES SELECTED PROJECT ID, THEN SETS ARRAY
+                userAddProject(projectList, username);
+                $('#projectSelected').val("all");
+            },
+            error: function (xhr, status) {
+                console.log(xhr, status);
+            },
+        })
+    }         
+    function userAddProject(projectList, username){
+        // GET USER ID
+        var myUser = encodeURIComponent(username);
+        var data = { "project_set": projectList };
+        var headers = { "Content-Type": "application/json"};
+        $.ajax({
+            url: "update/" + myUser + "/",
+            data: JSON.stringify(data),
+            headers: headers,
+            type: "PUT",
+            success: function (data) {
+                window.location.reload();
+            },
+        });
+    }
+    function clockOut(){
+      window.location.href = "{% url 'logout' %}";
+    }
+    function goToAdmin(){
+      window.location.href = "{% url 'login' %}?project={{currentProject}}";
+    }
+    function csrfSafeMethod(method) {
+        // don't reveal CSRF token to GET requests
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    //var csrftoken = ;  MARK CHECK BUG, moved csrf
+    $.ajaxSetup({ // MARK TO DO: MOVE CSRF TOKEN OUT OF GLOBAL SCOPE       
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader('X-CSRFToken', jQuery("[name=csrfmiddlewaretoken]").val());
+            }
+        }
+    });
+    $('#projectSelected').on('change', function(event) {
+        window.location.href = "{% url 'project' %}?project=" + this.value;
+        if (this.value == "all"){
+            sessionStorage.setItem("mode", "project"); // mode changes state of button
+            return;
+        }else{          
+            sessionStorage.setItem("mode", "edit");
+            return;
+        }
+    });
+    function deleteUser(event){
+        var personToRemove = event.target.offsetParent.nextSibling.parentNode.cells["0"].innerHTML;
+        userDeleteProject("{{currentID}}", personToRemove);
+    }
+    function userQuits(event){
+      var quitProject = event.target.offsetParent.nextSibling.parentNode.cells["0"].innerHTML;
+      console.log("QUITTING", quitProject);
+      userQuitProject(quitProject, "{{ user_email }}");
+    }
+    function deleteProject(event){
+      var deleteProject = event.target.offsetParent.nextSibling.parentNode.cells["0"].innerHTML;
+      console.log("DELETING", deleteProject);
+      sessionStorage.setItem("deleteThisProject", deleteProject);
+      $('#deleteModal').modal('show');
+    }
+</script>
+<style>
+*{
+    font-family:Helvetica,Arial,sans-serif;
+}
+#myFooter{
+    height:45px;
+}
+div{
+    padding: 10px;
+}
+th{
+    text-align: left;
+    pointer-events: none;
+    cursor: default;
+    color:#3371FF
+}
+td{
+    text-align: left;
+    cursor: default;
+}
+a {
+    color:#3371FF;
+    font-weight: bold;
+}
+.buttonList {
+    list-style-type: none;
+}
+.buttonList li {
+    margin-bottom:3px;
+    display: inline;
+}
+.noPads{
+    padding:0px;
+    margin:0px;
+}
+.borderB{
+    border-bottom:gainsboro solid 1.5px;
+}
+.borderR{
+    border-right:gainsboro solid 1px;
+}
+.borderL{
+    border-left:gainsboro solid 1px;
+}
+.borderT{
+    border-top:gainsboro solid 1px;
+}
+p{
+    display:inline-block;
+}
+.inline{
+    display:inline-block;
+    padding: 5px;
+}
+.column {
+    display:inline-block;
+    margin: auto;
+    height:35px;
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+}
+.main{
+    background-color:#C6E2FF;
+    margin: 0 auto;
+    width: 90%;
+    padding-top:50px;
+}
+.navBar{
+    display: inline-block;
+    padding-right:10px;
+}
+.btn-dope{
+  background-color:#3371FF;
+  color:#F0F0F0;
+}
+.btn-dope:hover{
+  background-color:#2964C4;
+  color:white;
+}
+#mainNav{
+  padding:0px;
+}
+#navbarResponsive{
+  padding:0px;
+}
+#inviteButtonContainer{
+  display: none;
+}
+#projectsContainer{
+  display: none;
+}
+#adminButton{
+  display: none;
+  font-weight: bold;
+  border:none;
+}
+.grayText{
+  color:#707070;
+  font-weight: bold;
+}
+.whiteBold{  
+  font-weight: normal;
+}
+</style>
