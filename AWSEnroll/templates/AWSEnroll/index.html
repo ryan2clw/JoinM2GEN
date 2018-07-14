@@ -23,11 +23,11 @@
     <!-- MARK TO DO: FIX CSS WHEN SHRUNK -->
     <link href="{% static "AWSEnroll/css/creative.min.css" %}" rel="stylesheet">
   </head>
-  <body class="main">
+  <body class="main bg-white m-3 pr-4">
   <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3f85db;" id="mainNav">
       <div class="container" style="padding-top:0px; padding-bottom:0px; padding-left: 10px;">
-        <a class="navbar-brand text-light" href="{% url 'admin:index' %}">ADMIN</a>
+        <a class="navbar text-light text-lg" href="{% url 'admin:index' %}">ADMIN</a>
         <button class="navbar-toggler navbar-toggler-right text-light" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
@@ -42,39 +42,40 @@
       </div>
     </nav>
     {% csrf_token %}
-        <p class="h3 text-center card-header container-fluid" style="color:#3f85db;background-color: white;border: 1px solid gainsboro;">
+        <p class="h3 text-center card-header container-fluid pr-4" style="color:#3f85db;background-color: white;">
           AWS Control Panel
         </p>
-        <ul id="topHalf" style="margin: auto;padding-bottom:16px;padding-top:12px;padding-left:0px">
-            <li class="column" style="padding-right:10px;padding-left:0px;">
-                <h5 class="navBar">Welcome, {{ first_name }}</h5>
-                <button id="logOutButton" type="button" class="btn-sm btn-dope" style="font-weight: bold;border:none;" onclick="clockOut()">Log Out</button>
-            </li>
-            <li class="column" style="padding-left:0px;">
-                <div style="display:inline-block; padding: 0px; vertical-align:text-middle" id="myButtonDiv">
-                    <ul class="buttonList" style="padding:0px;">
-                        <li>
-                            <h5 style="margin-bottom: 5px;padding-left:10px;" class="navBar">Action:</h5>
-                            <button id="projectButton" type="button" class="btn-sm btn-dope navBar" data-toggle="modal" data-target="#myModal" style="font-weight: bold;border:none;">Make Project</button>
-                            <button id="adminButton" type="button" class="btn-sm btn-dope" onclick="goToAdmin()">Admin</button>
-                        </li>
-                        <li id="projectsContainer">
-                          <h5 style="padding-left:5px;" class="navBar">Edit:</h5>
-                          <select id="projectSelected">
-                            <option id="myPlaceHolder" value="all">--------All--------</option>
-                            {% for project in object_list %}
-                              {% if project.owner.id == user.id %}
-                                <option value="{{ project }}">{{ project }}</option>
-                              {% else %}
-                                <option value="{{ project }}" disabled="true">{{ project }}</option>
-                              {% endif %}
-                            {% endfor %}
-                          </select>
-                        </li>             
-                    <ul>
-                </div>
-            </li>
-        </ul>
+        <div id="topHalf" class="card-header container-fluid pl-0 py-0 bg-white">
+          <div class="bg-white row pl-3 ">
+            <div class="column" style="border: 1px solid gainsboro;">
+              <p class="h5 d-inline m-4 align-middle">Welcome, {{ first_name }}</p>
+              <button id="logOutButton" type="button" class="btn-sm btn-dope d-inline align-middle" onclick="clockOut()">
+                <strong>Log Out</strong>
+              </button>
+            </div>
+            <div class="column" style="border: 1px solid gainsboro;">
+              <p class="h5 d-inline m-4 align-middle">Action:</p>
+              <button id="projectButton" type="button" class="btn-sm btn-dope border-0 align-middle" data-toggle="modal" data-target="#myModal">
+                <strong>Make Project</strong>
+              </button>
+              <button id="adminButton" type="button" class="btn-sm btn-dope align-middle" onclick="goToAdmin()">
+                <strong>Admin</strong>
+              </button>
+            </div>
+            <div class="column" id="projectsContainer">
+              <p class="h5 d-inline m-4 align-middle">Edit:</p>
+              <select id="projectSelected" class="align-middle">
+                <option id="myPlaceHolder" value="all">--------All--------</option>
+                {% for project in object_list %}
+                  {% if project.owner.id == user.id %}
+                    <option value="{{ project }}">{{ project }}</option>
+                  {% else %}
+                    <option value="{{ project }}" disabled="true">{{ project }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>              
         <!-- Project Modal (myModal) -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -150,18 +151,16 @@
             </div>
           </div>
         </div>
-        <div style="margin: auto; border-top: 1px solid DarkGray; width:100%"></div>
-        <div id="bottomHalf">
         {% load bootstrap4 %}
         {% load querystring from django_tables2 %}
         {% load title from django_tables2 %}
         {% block "content" %}
         {% if table.page %}
-            <div class="table-container" style="overflow-x: scroll;">
+          <div>
         {% endif %}
             {% block table %}
-            <div class="table-responsive" style="padding-bottom:0px;background-color:white;border: 1px solid gainsboro;">
-                <table id = "myTable" class="table table-hover table-bordered table-striped"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
+            <div class="table-responsive bg-white pb-0" style="overflow-x: visible;">
+                <table id = "myTable" class="table table-hover table-bordered table-striped mb-0"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
                     {% block table.thead %}
                     <thead>                 
                       <tr>
@@ -206,8 +205,7 @@
             {% endblock pagination %}
         {% endif %}
         {% endblock "content" %}       
-      </div>
-    </div>    
+      </div>   
   <!--div id="myFooter" style="padding-top:200px;">SeniorDevOps.com © 2018</div-->
   </body>
 </html>
@@ -398,7 +396,6 @@
         // don't reveal CSRF token to GET requests
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-    //var csrftoken = ;  MARK CHECK BUG, moved csrf
     $.ajaxSetup({ // MARK TO DO: MOVE CSRF TOKEN OUT OF GLOBAL SCOPE       
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -439,9 +436,6 @@
 #myFooter{
     height:45px;
 }
-div{
-    padding: 10px;
-}
 th{
     text-align: left;
     pointer-events: none;
@@ -456,54 +450,20 @@ a {
     color:#3f85db;
     font-weight: bold;
 }
-.buttonList {
-    list-style-type: none;
-}
-.buttonList li {
-    margin-bottom:3px;
-    display: inline;
-}
-.noPads{
-    padding:0px;
-    margin:0px;
-}
-.borderB{
-    border-bottom:gainsboro solid 1.5px;
-}
-.borderR{
-    border-right:gainsboro solid 1px;
-}
-.borderL{
-    border-left:gainsboro solid 1px;
-}
-.borderT{
-    border-top:gainsboro solid 1px;
-}
 p{
     display:inline-block;
-}
-.inline{
-    display:inline-block;
-    padding: 5px;
 }
 .column {
     display:inline-block;
     margin: auto;
+    min-width: 290px;
     height:35px;
     padding-top: 0px;
-    padding-left: 20px;
-    padding-right: 20px;
     padding-bottom: 0px;
 }
 .main{
-    background-color:#eff1f2;
-    margin: 0 auto;
-    width: 90%;
     padding-top:50px;
-}
-.navBar{
-    display: inline-block;
-    padding-right:10px;
+    height: 100%;
 }
 .btn-dope{
   background-color:#3f85db;
@@ -512,9 +472,6 @@ p{
 .btn-dope:hover{
   background-color:#2964C4;
   color:white;
-}
-#mainNav{
-  padding:0px;
 }
 #navbarResponsive{
   padding:0px;
@@ -527,14 +484,31 @@ p{
 }
 #adminButton{
   display: none;
-  font-weight: bold;
   border:none;
 }
-.grayText{
-  color:#707070;
-  font-weight: bold;
+* {
+    box-sizing: border-box;
 }
-.whiteBold{  
-  font-weight: normal;
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.3%;
+    padding: 10px;
+    height: 50px; 
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
 }
 </style>
