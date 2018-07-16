@@ -23,13 +23,13 @@
     <!-- MARK TO DO: FIX CSS WHEN SHRUNK -->
     <link href="{% static "AWSEnroll/css/creative.min.css" %}" rel="stylesheet">
   </head>
-  <body class="main bg-white m-3 pr-4">
+  <body class="main bg-white m-3 pr-4 fixed-top mt-3 text-center">
   <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top" style="background-color:#3f85db;" id="mainNav">
       <div class="container" style="padding-top:0px; padding-bottom:0px; padding-left: 10px;">
         <a class="navbar text-light text-lg" href="{% url 'admin:index' %}">ADMIN</a>
         <button class="navbar-toggler navbar-toggler-right text-light" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
+          <strong>Menu</strong>
           <i class="fa fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -45,7 +45,7 @@
         <p class="h3 text-center card-header container-fluid pr-4" style="color:#3f85db;background-color: white;">
           AWS Control Panel
         </p>
-        <div id="topHalf" class="card-header container-fluid pl-0 py-0 bg-white">
+        <div id="topHalf" class="card-header container-fluid pl-0 pr-4 py-0 bg-white">
           <div class="bg-white row pl-3 ">
             <div class="column" style="border: 1px solid gainsboro;">
               <p class="h5 d-inline m-4 align-middle">Welcome, {{ first_name }}</p>
@@ -54,15 +54,15 @@
               </button>
             </div>
             <div class="column" style="border: 1px solid gainsboro;">
-              <p class="h5 d-inline m-4 align-middle">Action:</p>
+              <p class="h5 d-inline mr-4 align-middle">Action:</p>
               <button id="projectButton" type="button" class="btn-sm btn-dope border-0 align-middle" data-toggle="modal" data-target="#myModal">
-                <strong>Make Project</strong>
+                <strong>Add Account</strong>
               </button>
               <button id="adminButton" type="button" class="btn-sm btn-dope align-middle" onclick="goToAdmin()">
                 <strong>Admin</strong>
               </button>
             </div>
-            <div class="column" id="projectsContainer">
+            <div class="column" id="projectsContainer" style="border: 1px solid gainsboro;">
               <p class="h5 d-inline m-4 align-middle">Edit:</p>
               <select id="projectSelected" class="align-middle">
                 <option id="myPlaceHolder" value="all">--------All--------</option>
@@ -159,8 +159,8 @@
           <div>
         {% endif %}
             {% block table %}
-            <div class="table-responsive bg-white pb-0" style="overflow-x: visible;">
-                <table id = "myTable" class="table table-hover table-bordered table-striped mb-0"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
+            <div class="table-responsive bg-white pb-0" style="overflow-x: visible;width:101.65%">
+                <table id = "myTable" class="table table-hover table-bordered table-striped m-0"{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
                     {% block table.thead %}
                     <thead>                 
                       <tr>
@@ -494,7 +494,7 @@ p{
 .column {
     float: left;
     width: 33.3%;
-    padding: 10px;
+    padding-top: 10px;
     height: 50px; 
 }
 
